@@ -45,3 +45,4 @@ exports.getAllEndpoints = (req, res, next) => {
   res.status(200).send(endpoints);
 };
 // Need to add more endpoints here once I add them
+

@@ -7,7 +7,9 @@
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "node ./db/seeds/run-seed.js",
     "test": "jest",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "dev": "nodemon ./listen.js",
+    "SQL-playground": "PGDATABASE=nc_news psql -f ./playground.sql > playground.txt"
   },
   "repository": {
     "type": "git",
@@ -28,7 +30,10 @@
   },
   "dependencies": {
     "dotenv": "^16.0.0",
-    "pg": "^8.7.3"
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22",
+    "pg": "^8.10.0",
+    "supertest": "^6.3.3"
   },
   "jest": {
     "setupFilesAfterEnv": [
