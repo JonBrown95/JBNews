@@ -19,6 +19,7 @@ describe("GET /topics", () => {
           expect(typeof topic.slug).toBe("string");
           expect(typeof topic.description).toBe("string");
         });
+
     
       });
   });
@@ -35,5 +36,8 @@ describe("GET /topics", () => {
           // Need to add more endpoints as I add them
         });
     });
+  });
+        expect(res.body.hasOwnProperty("topics")).toBe(true);
+      });
   });
 });
