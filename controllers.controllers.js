@@ -16,6 +16,7 @@ exports.getAllTopics = (req, res, next) => {
 };
 
 exports.getAllEndpoints = (req, res, next) => {
+    // Read file instead of inputting variable and outputting as JSON object
   fs.readFile("endpoints.json", (err, data) => {
     if (err) {
       return next(err);

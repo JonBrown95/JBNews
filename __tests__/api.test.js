@@ -20,7 +20,6 @@ describe("GET /topics", () => {
           expect(typeof topic.description).toBe("string");
         });
 
-    
       });
   });
 
@@ -33,11 +32,9 @@ describe("GET /topics", () => {
         .then((res) => {
           expect(res.body.hasOwnProperty("GET /api")).toBe(true);
           expect(res.body.hasOwnProperty("GET /api/topics")).toBe(true);
-          // Need to add more endpoints as I add them
+        
         });
     });
   });
-        expect(res.body.hasOwnProperty("topics")).toBe(true);
       });
-  });
-});
+  
