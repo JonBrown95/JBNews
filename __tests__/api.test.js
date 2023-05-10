@@ -54,12 +54,21 @@ describe("GET /api/articles/:article_id", () => {
         expect(body.hasOwnProperty("article_img_url")).toBe(true);
       });
   });
-  test("GET /api/articles/:invalid - Status 400 - invalid article ID", () => {
+  test("GET /api/articles/:invalid - Status 404 - invalid article ID", () => {
     return request(app)
       .get("/api/articles/66859")
-      .expect(400)
+      .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("ID not found");
+      });
+  });
+
+  test("GET /api/articles/99999999 - Status 400 - invalid article ID value", () => {
+    return request(app)
+      .get("/api/articles/banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
       });
   });
 });
