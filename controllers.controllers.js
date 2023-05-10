@@ -1,4 +1,9 @@
 const { getTopics } = require("./models.models");
+const express = require("express");
+const fs = require("fs");
+const app = express();
+app.use(express.json());
+
 
 exports.getAllTopics = (req, res, next) => {
   getTopics()
@@ -10,3 +15,13 @@ exports.getAllTopics = (req, res, next) => {
     });
 };
 
+exports.getAllEndpoints = (req, res, next) => {
+    // Read file instead of inputting variable and outputting as JSON object
+  fs.readFile("endpoints.json", (err, data) => {
+    if (err) {
+      return next(err);
+    }
+    const endpoints = JSON.parse(data.toString());
+    res.status(200).send(endpoints);
+  });
+};

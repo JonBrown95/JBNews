@@ -19,7 +19,22 @@ describe("GET /topics", () => {
           expect(typeof topic.slug).toBe("string");
           expect(typeof topic.description).toBe("string");
         });
-        expect(res.body.hasOwnProperty("topics")).toBe(true);
+
       });
   });
-});
+
+  describe("GET /api", () => {
+    test("returns status 200 and JSON object describing all of the available endpoints on the API", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .expect("Content-Type", "application/json; charset=utf-8")
+        .then((res) => {
+          expect(res.body.hasOwnProperty("GET /api")).toBe(true);
+          expect(res.body.hasOwnProperty("GET /api/topics")).toBe(true);
+        
+        });
+    });
+  });
+      });
+  

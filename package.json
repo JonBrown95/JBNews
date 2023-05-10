@@ -8,8 +8,7 @@
     "seed": "node ./db/seeds/run-seed.js",
     "test": "jest",
     "prepare": "husky install",
-    "dev": "nodemon ./listen.js",
-    "SQL-playground": "PGDATABASE=nc_news psql -f ./playground.sql > playground.txt"
+    "dev": "nodemon ./listen.js"
   },
   "repository": {
     "type": "git",
