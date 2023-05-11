@@ -1,4 +1,8 @@
-const { getTopics, getArticle } = require("./models.models");
+
+const { getTopics, getArticles } = require("./models.models");
+
+
+
 const express = require("express");
 const fs = require("fs");
 const app = express();
@@ -25,6 +29,17 @@ exports.getAllEndpoints = (req, res, next) => {
   });
 };
 
+
+exports.getAllArticles = (req, res, next) => {
+    getArticles()
+      .then((articles) => {
+        res.status(200).send({ articles });
+      })
+      .catch((error) => {
+        next(error);
+      });
+  };
+
 exports.getArticleById = (req, res, next) => {
   const articleId = req.params.article_id;
   console.log(articleId);
@@ -34,3 +49,4 @@ exports.getArticleById = (req, res, next) => {
     next(err)
 })
 }
+
