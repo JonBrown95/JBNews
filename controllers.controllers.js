@@ -1,7 +1,9 @@
-
-const { getTopics, getArticles } = require("./models.models");
-
-
+const {
+  getTopics,
+  getArticles,
+  getArticle,
+  getComments,
+} = require("./models.models");
 
 const express = require("express");
 const fs = require("fs");
@@ -26,27 +28,36 @@ exports.getAllEndpoints = (req, res, next) => {
     }
     const endpoints = JSON.parse(data.toString());
     res.status(200).send(endpoints);
-  });
-};
+  })
+  };
 
 
 exports.getAllArticles = (req, res, next) => {
-    getArticles()
-      .then((articles) => {
-        res.status(200).send({ articles });
-      })
-      .catch((error) => {
-        next(error);
-      });
-  };
+  getArticles()
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
 
 exports.getArticleById = (req, res, next) => {
   const articleId = req.params.article_id;
-  console.log(articleId);
-  getArticle(articleId).then((article) => {
-    res.status(200).send({ article });
+  getArticle(articleId)
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getCommentsByArticleId = (req, res, next) => {
+  const articleId = req.params.article_id;
+  getComments(articleId).then((comments) => {
+    res.status(200).send({ comments });
   }).catch((err) => {
     next(err)
-})
-}
-
+  })
+};
