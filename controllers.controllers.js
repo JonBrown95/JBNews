@@ -1,9 +1,12 @@
+
 const { getTopics, getArticles } = require("./models.models");
+
+
+
 const express = require("express");
 const fs = require("fs");
 const app = express();
 app.use(express.json());
-
 
 exports.getAllTopics = (req, res, next) => {
   getTopics()
@@ -16,7 +19,7 @@ exports.getAllTopics = (req, res, next) => {
 };
 
 exports.getAllEndpoints = (req, res, next) => {
-    // Read file instead of inputting variable and outputting as JSON object
+  // Read file instead of inputting variable and outputting as JSON object
   fs.readFile("endpoints.json", (err, data) => {
     if (err) {
       return next(err);
@@ -25,6 +28,7 @@ exports.getAllEndpoints = (req, res, next) => {
     res.status(200).send(endpoints);
   });
 };
+
 
 exports.getAllArticles = (req, res, next) => {
     getArticles()
@@ -35,3 +39,14 @@ exports.getAllArticles = (req, res, next) => {
         next(error);
       });
   };
+
+exports.getArticleById = (req, res, next) => {
+  const articleId = req.params.article_id;
+  console.log(articleId);
+  getArticle(articleId).then((article) => {
+    res.status(200).send({ article });
+  }).catch((err) => {
+    next(err)
+})
+}
+

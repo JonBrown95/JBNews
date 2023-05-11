@@ -19,8 +19,34 @@ describe("GET /topics", () => {
           expect(typeof topic.slug).toBe("string");
           expect(typeof topic.description).toBe("string");
         });
+
+=======
       });
   });
+});
+
+describe("GET /api", () => {
+  test("returns status 200 and JSON object describing all of the available endpoints on the API", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .expect("Content-Type", "application/json; charset=utf-8")
+      .then((res) => {
+        expect(res.body.hasOwnProperty("GET /api")).toBe(true);
+        expect(res.body.hasOwnProperty("GET /api/topics")).toBe(true);
+
+      });
+  });
+});
+describe("GET /api/articles/:article_id", () => {
+  test("returns status 200 and JSON article object", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .expect("Content-Type", "application/json; charset=utf-8")
+      .then((result) => {
+        const body = result.body.article;
+
 
   describe("GET /api", () => {
     test("returns status 200 and JSON object describing all of the available endpoints on the API", () => {
@@ -54,6 +80,33 @@ describe("GET /articles", () => {
           expect(typeof article.article_img_url).toBe("string");
           expect(typeof article.comment_count).toBe("string");
         });
+
+        expect(body.hasOwnProperty("author")).toBe(true);
+        expect(body.hasOwnProperty("title")).toBe(true);
+        expect(body.hasOwnProperty("article_id")).toBe(true);
+        expect(body.hasOwnProperty("body")).toBe(true);
+        expect(body.hasOwnProperty("topic")).toBe(true);
+        expect(body.hasOwnProperty("created_at")).toBe(true);
+        expect(body.hasOwnProperty("votes")).toBe(true);
+        expect(body.hasOwnProperty("article_img_url")).toBe(true);
+      });
+  });
+  test("GET /api/articles/:invalid - Status 404 - invalid article ID", () => {
+    return request(app)
+      .get("/api/articles/66859")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("ID not found");
+      });
+  });
+
+  test("GET /api/articles/99999999 - Status 400 - invalid article ID value", () => {
+    return request(app)
+      .get("/api/articles/banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+
       });
   });
 });
