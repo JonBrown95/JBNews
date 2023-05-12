@@ -3,6 +3,7 @@ const {
   getArticles,
   getArticle,
   getComments,
+  postComment,
 } = require("./models.models");
 
 const express = require("express");
@@ -28,9 +29,8 @@ exports.getAllEndpoints = (req, res, next) => {
     }
     const endpoints = JSON.parse(data.toString());
     res.status(200).send(endpoints);
-  })
-  };
-
+  });
+};
 
 exports.getAllArticles = (req, res, next) => {
   getArticles()
@@ -55,9 +55,26 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getCommentsByArticleId = (req, res, next) => {
   const articleId = req.params.article_id;
-  getComments(articleId).then((comments) => {
-    res.status(200).send({ comments });
-  }).catch((err) => {
-    next(err)
-  })
-}
+  getComments(articleId)
+    .then((comments) => {
+      res.status(200).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.addComment = (req, res, next) => {
+  const addedComment = req.body;
+  const article_id = +req.params.article_id;
+
+  addedComment.article_id = article_id;
+
+  postComment(addedComment)
+    .then((newComment) => {
+      res.status(201).send({ comment: newComment });
+    })
+    .catch((err) => {
+        next(err);
+    });
+};

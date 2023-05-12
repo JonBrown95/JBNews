@@ -144,3 +144,37 @@ describe("GET /articles", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("returns status 201 and responds with the new comment", () => {
+    const newComment = {
+      body: "Why hello Jill",
+      username: "rogersop",
+    };
+
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .expect(201)
+
+      .then((res) => {
+        const comment = res.body.comment;
+        expect(comment.body).toBe("Why hello Jill");
+        expect(comment.author).toBe("rogersop");
+      });
+  });
+
+  test("returns status 404 if the article does not exist", () => {
+    const newComment = {
+      body: "WHY HELLOOO JILLLL",
+      username: "rogersop",
+    };
+    return request(app)
+      .post("/api/articles/999/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article 999 does not exist");
+      });
+  });
+});

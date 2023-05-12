@@ -73,17 +73,41 @@ exports.getComments = (articleId) => {
     [articleId]
   );
 
-  return Promise.all([commentsQuery, articleExistsQuery])
+  return Promise.all([commentsQuery, articleExistsQuery]).then((result) => {
+    const commentsRows = result[0];
+    const articlesRows = result[1].rows[0];
+    if (!articlesRows) {
+      return Promise.reject({
+        status: 404,
+        msg: `Article ${articleId} does not exist`,
+      });
+    }
+    return commentsRows.rows;
+  });
+};
+
+exports.postComment = (comment) => {
+  const { username, body, article_id } = comment;
+
+  const articleExistsQuery = db.query(
+    `SELECT * FROM articles WHERE article_id = $1;`,
+    [article_id]
+  );
+
+  return articleExistsQuery
     .then((result) => {
-      const commentsRows = result[0];
-      const articlesRows = result[1].rows[0];
+      const articlesRows = result.rows[0];
       if (!articlesRows) {
         return Promise.reject({
           status: 404,
-          msg: `Article ${articleId} does not exist`,
+          msg: `Article ${article_id} does not exist`,
         });
       }
-      return commentsRows.rows;
+
+      return db.query(
+        `INSERT INTO comments (author, body, article_id) VALUES ($1, $2, $3) RETURNING *;`,
+        [username, body, article_id]
+      );
     })
-    
+    .then((result) => result.rows[0]);
 };
