@@ -3,6 +3,20 @@ exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
   return { created_at: new Date(created_at), ...otherProperties };
 };
 
+exports.checkArticleExists = (articleId) => {
+  return db
+    .query(
+      `
+    SELECT *
+    FROM articles
+    WHERE article_id = $1;
+    `,
+      [articleId]
+    )
+  
+    
+};
+
 exports.createRef = (arr, key, value) => {
   return arr.reduce((ref, element) => {
     ref[element[key]] = element[value];

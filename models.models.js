@@ -1,4 +1,5 @@
 const db = require("./db/connection");
+const { checkArticleExists } = require("./db/seeds/utils");
 
 exports.getTopics = () => {
   return db.query("SELECT * FROM topics;").then((result) => result.rows);
@@ -53,30 +54,36 @@ exports.getArticle = (articleId) => {
 };
 
 exports.getComments = (articleId) => {
-  if (articleId < 1 || articleId > 99999999) {
-    return Promise.reject({
-      status: 400,
-      msg: "Invalid input - Invalid article ID value",
-    });
-  }
-  return db
-    .query(
-      `
+  const commentsQuery = db.query(
+    `
     SELECT *
     FROM comments
     WHERE article_id = $1
     ORDER BY created_at DESC;
     `,
-      [articleId]
-    )
+    [articleId]
+  );
+
+  const articleExistsQuery = db.query(
+    `
+    SELECT *
+    FROM articles
+    WHERE article_id = $1;
+    `,
+    [articleId]
+  );
+
+  return Promise.all([commentsQuery, articleExistsQuery])
     .then((result) => {
-      const comments = result.rows;
-      if (comments.length === 0) {
+      const commentsRows = result[0];
+      const articlesRows = result[1].rows[0];
+      if (!articlesRows) {
         return Promise.reject({
           status: 404,
-          msg: "No comments found for that article ID",
+          msg: `Article ${articleId} does not exist`,
         });
       }
-      return comments;
-    });
+      return commentsRows.rows;
+    })
+    
 };

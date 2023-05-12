@@ -44,6 +44,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .expect("Content-Type", "application/json; charset=utf-8")
       .then((result) => {
         const comments = result.body.comments;
+        expect(comments).toHaveLength(11);
         comments.forEach((comment) => {
           expect(comment.hasOwnProperty("comment_id")).toBe(true);
           expect(typeof comment.comment_id).toBe("number");
@@ -55,12 +56,12 @@ describe("GET /api/articles/:article_id/comments", () => {
         });
       });
   });
-  test("GET /api/articles/:invalid/comments - Status 404 - invalid article ID", () => {
+  test("GET /api/articles/:invalid/comments - Status 404 - article ID does not exist", () => {
     return request(app)
       .get("/api/articles/66859/comments")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("No comments found for that article ID");
+        expect(body.msg).toBe("Article 66859 does not exist");
       });
   });
   test("GET /api/articles/banana/comments - Status 400 - invalid article ID value", () => {
@@ -91,7 +92,7 @@ describe("GET /api/articles/:article_id", () => {
         expect(body.hasOwnProperty("article_img_url")).toBe(true);
       });
   });
-  test("GET /api/articles/:invalid - Status 404 - invalid article ID", () => {
+  test("GET /api/articles/:invalid - Status 404 - article ID does not exist", () => {
     return request(app)
       .get("/api/articles/66859")
       .expect(404)
@@ -100,7 +101,7 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 
-  test("GET /api/articles/99999999 - Status 400 - invalid article ID value", () => {
+  test("GET /api/articles/banana - Status 400 - invalid article ID value", () => {
     return request(app)
       .get("/api/articles/banana")
       .expect(400)
