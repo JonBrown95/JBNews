@@ -1,6 +1,10 @@
 const db = require("./db/connection");
 const { checkArticleExists } = require("./db/seeds/utils");
 
+const checkArticleIsValid = (article_id) => {
+  return db.query(`SELECT COUNT(*) FROM articles WHERE article_id = $1`, [articleId])
+}
+
 exports.getTopics = () => {
   return db.query("SELECT * FROM topics;").then((result) => result.rows);
 };

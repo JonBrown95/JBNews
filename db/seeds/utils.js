@@ -3,13 +3,10 @@ exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
   return { created_at: new Date(created_at), ...otherProperties };
 };
 
-function checkArticleExists(articleId, db) {
+function checkArticleExists(articleId) {
   return db.query(`SELECT COUNT(*) FROM articles WHERE article_id = $1`, [articleId])
-    .then((result) => {
-      const count = parseInt(result.rows[0].count);
-      return count > 0;
-    });
-}
+  
+    }
 
 exports.createRef = (arr, key, value) => {
   return arr.reduce((ref, element) => {
