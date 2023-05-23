@@ -4,6 +4,7 @@ const {
   getArticle,
   getComments,
   postComment,
+  updateArticle,
 } = require("./models.models");
 
 const express = require("express");
@@ -76,5 +77,18 @@ exports.addComment = (req, res, next) => {
     })
     .catch((err) => {
         next(err);
+    });
+};
+
+exports.patchArticleVotes = (req, res, next) => {
+  const articleId = req.params.article_id;
+  const { inc_votes } = req.body;
+
+  updateArticle(articleId, inc_votes)
+    .then((updatedArticle) => {
+      res.status(200).send({ article: updatedArticle });
+    })
+    .catch((err) => {
+      next(err);
     });
 };

@@ -115,3 +115,28 @@ exports.postComment = (comment) => {
     })
     .then((result) => result.rows[0]);
 };
+
+exports.updateArticle = (articleId, incVotes) => {
+  if (articleId < 1 || articleId > 99999999) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid input - Invalid article ID value",
+    });
+  }
+
+  return db
+    .query(
+      "UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *",
+      [incVotes, articleId]
+    )
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "ID not found",
+        });
+      }
+      const updatedArticle = result.rows[0];
+      return updatedArticle;
+    });
+};

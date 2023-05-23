@@ -178,3 +178,33 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("returns status 200 and the updated article object with increased votes", () => {
+    const articleId = 1;
+    const newVotes = 20;
+    return request(app)
+    
+      .patch(`/api/articles/${articleId}`)
+      .send({ inc_votes: 120 })
+      .expect(200)
+      .expect("Content-Type", "application/json; charset=utf-8")
+      .then((res) => {
+        const updatedArticle = res.body.article;
+        expect(updatedArticle.article_id).toBe(articleId);
+        expect(updatedArticle.votes).toBe(220);
+      });
+  });
+  test("returns status 400 if the article ID is invalid", () => {
+    const invalidArticleId = 0;
+
+    return request(app)
+      .patch(`/api/articles/${invalidArticleId}`)
+      .send({ inc_votes: 1 })
+      .expect(400)
+      .expect("Content-Type", "application/json; charset=utf-8")
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid input - Invalid article ID value");
+      });
+  });
+});
